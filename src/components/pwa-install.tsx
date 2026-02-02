@@ -37,9 +37,13 @@ export function PWAInstall() {
 
   useEffect(() => {
     // Check if app is already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsInstalled(true)
+    const checkInstalled = () => {
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        setIsInstalled(true)
+      }
     }
+
+    checkInstalled()
 
     // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e: Event) => {
