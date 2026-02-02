@@ -11,6 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
+import { DocumentUpload } from "@/components/document-upload"
+import { VerificationSystem } from "@/components/verification-system"
 import {
   ArrowLeft,
   Edit,
@@ -89,6 +91,7 @@ export default function CaseDetailPage() {
   const [caseData, setCaseData] = useState<CaseWithDetails | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [showUpload, setShowUpload] = useState(false)
 
   const slug = params.slug as string
 
@@ -115,6 +118,31 @@ export default function CaseDetailPage() {
       setError("An unexpected error occurred")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleDocumentUploaded = (document: any) => {
+    // Refresh case data to show new document
+    fetchCase()
+    setShowUpload(false)
+  }
+
+  const handleDownloadDocument = async (documentId: string) => {
+    try {
+      const response = await fetch(`/api/documents/download/${documentId}`)
+      if (response.ok) {
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = response.headers.get('Content-Disposition')?.split('filename=')[1]?.replace(/"/g, '') || 'document'
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+      }
+    } catch (error) {
+      console.error("Download error:", error)
     }
   }
 
@@ -282,7 +310,7 @@ export default function CaseDetailPage() {
 
           {/* Main Content */}
           <Tabs defaultValue="content" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-6">
               <TabsTrigger value="content">Story</TabsTrigger>
               <TabsTrigger value="timeline">
                 Timeline ({caseData._count.timeline})
@@ -295,6 +323,9 @@ export default function CaseDetailPage() {
               </TabsTrigger>
               <TabsTrigger value="updates">
                 Updates ({caseData._count.updates})
+              </TabsTrigger>
+              <TabsTrigger value="verification">
+                Verification
               </TabsTrigger>
             </TabsList>
 
@@ -369,14 +400,22 @@ export default function CaseDetailPage() {
             </TabsContent>
 
             <TabsContent value="documents" className="space-y-4">
+              {showUpload && canEdit && (
+                <DocumentUpload
+                  caseId={caseData.id}
+                  onUploadComplete={handleDocumentUploaded}
+                  onCancel={() => setShowUpload(false)}
+                />
+              )}
+              
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <CardTitle>Documents & Evidence</CardTitle>
                     {canEdit && (
-                      <Button size="sm">
+                      <Button size="sm" onClick={() => setShowUpload(!showUpload)}>
                         <Plus className="mr-2 h-4 w-4" />
-                        Upload Document
+                        {showUpload ? "Cancel" : "Upload Document"}
                       </Button>
                     )}
                   </div>
@@ -405,7 +444,11 @@ export default function CaseDetailPage() {
                           </div>
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">{doc.documentType}</Badge>
-                            <Button size="sm" variant="outline">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleDownloadDocument(doc.id)}
+                            >
                               <Download className="h-4 w-4" />
                             </Button>
                           </div>
@@ -415,6 +458,15 @@ export default function CaseDetailPage() {
                   ) : (
                     <p className="text-muted-foreground text-center py-8">
                       No documents have been uploaded yet.
+                      {canEdit && (
+                        <Button 
+                          variant="link" 
+                          className="ml-2 p-0 h-auto"
+                          onClick={() => setShowUpload(true)}
+                        >
+                          Upload your first document
+                        </Button>
+                      )}
                     </p>
                   )}
                 </CardContent>
@@ -508,6 +560,20 @@ export default function CaseDetailPage() {
                   )}
                 </CardContent>
               </Card>
+            </TabsContent>
+
+            <TabsContent value="verification" className="space-y-4">
+              <VerificationSystem
+                targetId={caseData.id}
+                targetType="CASE"
+                title={caseData.title}
+                description="Help verify the accuracy and credibility of this journalism case."
+                existingVerifications={[]}
+                onVerificationComplete={() => {
+                  // Refresh case data to show new verification
+                  fetchCase()
+                }}
+              />
             </TabsContent>
           </Tabs>
         </div>

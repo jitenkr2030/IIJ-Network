@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Providers } from "@/components/providers";
+import { PWAInstall } from "@/components/pwa-install";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,6 +22,16 @@ export const metadata: Metadata = {
   authors: [{ name: "IIJN Team" }],
   icons: {
     icon: "/logo.svg",
+    apple: "/icons/icon-152x152.png",
+  },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "IIJN",
+  },
+  formatDetection: {
+    telephone: false,
   },
   openGraph: {
     title: "Indian Independent Journalists Network (IIJN)",
@@ -49,6 +60,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <Toaster />
+          <PWAInstall />
         </Providers>
       </body>
     </html>
