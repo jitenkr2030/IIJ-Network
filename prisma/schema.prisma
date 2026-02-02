@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// IIJN Platform Database Schema
+// Indian Independent Journalists Network - Comprehensive Platform Schema
 
 generator client {
   provider = "prisma-client-js"
@@ -13,20 +10,369 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User Management System
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  password    String?
+  role        UserRole @default(PUBLIC)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  journalistProfile JournalistProfile?
+  caseSubscriptions CaseSubscription[]
+  caseComments      CaseComment[]
+  verifications     Verification[]
+  auditLogs         AuditLog[]
+
+  @@map("users")
 }
 
-model Post {
+enum UserRole {
+  PUBLIC
+  JOURNALIST
+  ADMIN
+  MODERATOR
+}
+
+// Journalist Profile & Verification System
+model JournalistProfile {
+  id               String            @id @default(cuid())
+  userId           String            @unique
+  membershipId     String?           @unique
+  membershipTier   MembershipTier    @default(ASSOCIATE)
+  verificationStatus VerificationStatus @default(PENDING)
+  bio              String?
+  experience       String?           // Years of experience
+  specialization   String?           // Area of expertise
+  location         String?           // Geographic coverage
+  languages        String?           // Languages known (JSON array)
+  website          String?
+  socialMedia      String?           // JSON object with social links
+  isVerified       Boolean           @default(false)
+  verifiedAt       DateTime?
+  mentorId         String?           // For mentorship system
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  // Relations
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mentor            JournalistProfile? @relation("MentorMentee", fields: [mentorId], references: [id])
+  mentees           JournalistProfile[] @relation("MentorMentee")
+  cases             Case[]            // Cases owned by journalist
+  publications      Publication[]
+
+  @@map("journalist_profiles")
+}
+
+enum MembershipTier {
+  ASSOCIATE
+  VERIFIED
+  SENIOR
+  MENTOR
+}
+
+enum VerificationStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  SUSPENDED
+}
+
+// Case Management System
+model Case {
+  id            String      @id @default(cuid())
+  title         String
+  slug          String      @unique
+  description   String
+  content       String?     // Main story content
+  status        CaseStatus  @default(DRAFT)
+  priority      Priority    @default(MEDIUM)
+  category      String      // e.g., "Corruption", "Education", "Healthcare"
+  tags          String?     // JSON array of tags
+  location      String?     // Geographic location
+  isPublic      Boolean     @default(false)
+  publishedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  journalistId      String?
+  journalist        JournalistProfile? @relation(fields: [journalistId], references: [id])
+  timeline          CaseTimeline[]
+  documents         Document[]
+  authorities       Authority[]
+  sources           Source[]
+  updates           CaseUpdate[]
+  comments          CaseComment[]
+  subscriptions     CaseSubscription[]
+
+  @@map("cases")
+}
+
+enum CaseStatus {
+  DRAFT
+  IN_PROGRESS
+  UNDER_REVIEW
+  PUBLISHED
+  ARCHIVED
+  CLOSED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// Case Timeline System
+model CaseTimeline {
+  id          String           @id @default(cuid())
+  caseId      String
+  title       String
+  description String
+  eventType   TimelineEventType @default(UPDATE)
+  eventDate   DateTime
+  isPublic    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  case        Case             @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("case_timeline")
+}
+
+enum TimelineEventType {
+  UPDATE
+  DEVELOPMENT
+  LEGAL_ACTION
+  RESPONSE
+  EVIDENCE_ADDED
+  MILESTONE
+}
+
+// Document Management System
+model Document {
+  id           String       @id @default(cuid())
+  caseId       String
+  title        String
+  description  String?
+  fileName     String
+  filePath     String
+  fileType     String
+  fileSize     Int
+  documentType DocumentType @default(EVIDENCE)
+  isPublic     Boolean      @default(false)
+  uploadedBy   String
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  // Relations
+  case         Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
+}
+
+enum DocumentType {
+  EVIDENCE
+  RTI
+  FIR
+  NOTICE
+  VIDEO
+  AUDIO
+  IMAGE
+  LEGAL_DOCUMENT
+  CORRESPONDENCE
+}
+
+// Authority & Institution Tagging
+model Authority {
+  id          String   @id @default(cuid())
+  caseId      String
+  name        String
+  type        String   // "Police", "Government", "Court", "Institution"
+  designation String?  // Specific role or department
+  contact     String?
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  case        Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("authorities")
+}
+
+// Source Management
+model Source {
+  id          String      @id @default(cuid())
+  caseId      String
+  name        String
+  type        SourceType  @default(PRIMARY)
+  contact     String?
+  isVerified  Boolean     @default(false)
+  isAnonymous Boolean     @default(false)
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  case        Case        @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("sources")
+}
+
+enum SourceType {
+  PRIMARY
+  SECONDARY
+  DOCUMENT
+  WHISTLEBLOWER
+  OFFICIAL
+}
+
+// Case Updates & Follow-ups
+model CaseUpdate {
+  id          String   @id @default(cuid())
+  caseId      String
+  title       String
+  content     String
+  isPublic    Boolean  @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  case        Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("case_updates")
+}
+
+// Public Engagement System
+model CaseComment {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  caseId    String
+  userId    String
+  content   String
+  isPublic  Boolean  @default(true)
+  isVerified Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations
+  case      Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("case_comments")
+}
+
+model CaseSubscription {
+  id         String            @id @default(cuid())
+  caseId     String
+  userId     String
+  type       SubscriptionType  @default(UPDATES)
+  isActive   Boolean           @default(true)
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  // Relations
+  case       Case              @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  user       User              @relation(fields: [userId], references: [id])
+
+  @@unique([caseId, userId])
+  @@map("case_subscriptions")
+}
+
+enum SubscriptionType {
+  UPDATES
+  ALERTS
+  MAJOR_DEVELOPMENTS
+}
+
+// Publication & Portfolio Management
+model Publication {
+  id               String   @id @default(cuid())
+  journalistId     String
+  title            String
+  summary          String?
+  url              String?
+  publishedAt      DateTime?
+  publicationOutlet String?  // Where it was published
+  caseId           String?  // Link to related case if any
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  journalist       JournalistProfile @relation(fields: [journalistId], references: [id])
+
+  @@map("publications")
+}
+
+// Trust & Verification System
+model Verification {
+  id             String           @id @default(cuid())
+  targetId       String           // Can be case, journalist, or comment
+  targetType     VerificationTarget
+  verifierId     String           // User who performed verification
+  verifierType   VerifierType     @default(PUBLIC)
+  status         VerificationStatus @default(PENDING)
+  confidence     Int?             // 1-100 confidence score
+  notes          String?
+  evidence       String?          // JSON array of evidence
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  // Relations
+  verifier       User             @relation(fields: [verifierId], references: [id])
+
+  @@map("verifications")
+}
+
+enum VerificationTarget {
+  CASE
+  JOURNALIST
+  COMMENT
+  SOURCE
+}
+
+enum VerifierType {
+  PUBLIC
+  JOURNALIST
+  ADMIN
+  EXTERNAL_AGENCY
+}
+
+// Audit Trail System
+model AuditLog {
+  id        String       @id @default(cuid())
+  userId    String
+  action    String       // "CREATE", "UPDATE", "DELETE", "LOGIN", etc.
+  resource  String       // Resource type (case, document, etc.)
+  resourceId String?     // ID of the resource
+  oldValues String?      // JSON of previous values
+  newValues String?      // JSON of new values
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime     @default(now())
+
+  // Relations
+  user      User         @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+// System Configuration
+model SystemConfig {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_config")
 }

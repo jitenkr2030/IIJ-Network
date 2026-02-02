@@ -1,141 +1,282 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# Indian Independent Journalists Network (IIJN)
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+🏗️ Platform-Independent Journalism + Journalist Association
 
-## ✨ Technology Stack
+## Overview
 
-This scaffold provides a robust foundation built with:
+The Indian Independent Journalists Network (IIJN) is a comprehensive platform designed to empower independent journalists with platform-independent infrastructure, verified profiles, case management, and direct public engagement. Built with Next.js 16, TypeScript, and modern web technologies.
 
-### 🎯 Core Framework
-- **⚡ Next.js 16** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+## 🎯 Mission
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+"IIJN ensures that independent journalists can report the truth, protect the public interest, and survive platform disruptions, all while remaining part of a credible national network."
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+## ✨ Key Features
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Fetch** - Promise-based HTTP request
+### 1. Platform-Independent Infrastructure
+- **Central Website** – Primary archive for all reporting and cases
+- **PWA Support** – Works offline, bypasses Play Store dependency
+- **Email Bulletins** – Direct communication with public
+- **Social Media Mirroring** – Teasers only, never source of truth
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+### 2. Case-Based Journalism System
+- **Case File Management** – Each news story = individual case
+- **Timeline Tracking** – All developments logged chronologically
+- **Document Uploads** – RTI, FIRs, notices, government documents, videos
+- **Follow-ups & Updates** – Transparent reporting of progress
+- **Authority Tagging** – Police, officials, institutions linked to cases
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
+### 3. Verified Journalist Profiles
+- **Membership ID** – Verified journalist identity
+- **Profile Pages** – Publications, case ownership, area of coverage
+- **Public Accountability** – Readers can see all work tied to a journalist
+- **Mentorship System** – Senior journalists guide new reporters
 
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
+### 4. Trust & Verification Layer
+- **Source Disclosure** – Verified sources for each report
+- **Evidence-First Reporting** – News backed by documents & media
+- **Correction History** – Transparent record of updates
+- **Community Verification** – Public flags or verifies reports
 
-## 🎯 Why This Scaffold?
+### 5. Public-Focused Features
+- **Direct Case Access** – Citizens can read, follow, or subscribe
+- **Alerts & Notifications** – Important issues delivered directly
+- **Subscription System** – Support investigative journalism
+- **Issue-Based Filtering** – Search by region, case type, governance issue
 
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
+## 🛠 Technology Stack
 
-## 🚀 Quick Start
+### Core Framework
+- **Next.js 16** with App Router
+- **TypeScript 5** for type safety
+- **Tailwind CSS 4** for styling
+- **shadcn/ui** component library
 
-```bash
-# Install dependencies
-bun install
+### Database & Authentication
+- **Prisma ORM** with SQLite
+- **NextAuth.js v4** for authentication
+- **bcryptjs** for password hashing
 
-# Start development server
-bun run dev
+### Additional Libraries
+- **Zod** for schema validation
+- **React Hook Form** for form management
+- **TanStack Query** for server state
+- **Zustand** for client state
+- **Lucide React** for icons
 
-# Build for production
-bun run build
+## 📋 Database Schema
 
-# Start production server
-bun start
-```
+The platform uses a comprehensive database schema with the following key models:
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+- **Users** - Authentication and role management
+- **Journalist Profiles** - Verified journalist information
+- **Cases** - Individual journalism cases with full metadata
+- **Case Timeline** - Chronological event tracking
+- **Documents** - Evidence and supporting materials
+- **Sources** - Source management and verification
+- **Authorities** - Institution and official tagging
+- **Publications** - Journalist portfolio management
+- **Verifications** - Multi-layer trust system
+- **Audit Logs** - Complete activity tracking
 
-## 🤖 Powered by Z.ai
+## 🚀 Getting Started
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
+### Prerequisites
+- Node.js 18+ 
+- Bun package manager
+- Git
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
+### Installation
 
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/jitenkr2030/IIJ-Network.git
+   cd IIJ-Network
+   ```
+
+2. **Install dependencies**
+   ```bash
+   bun install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+4. **Set up the database**
+   ```bash
+   bun run db:push
+   ```
+
+5. **Start the development server**
+   ```bash
+   bun run dev
+   ```
+
+6. **Open your browser**
+   Navigate to `http://localhost:3000`
 
 ## 📁 Project Structure
 
 ```
 src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   │   ├── auth/          # Authentication endpoints
+│   │   └── cases/         # Case management endpoints
+│   ├── cases/             # Case-related pages
+│   └── layout.tsx         # Root layout
+├── components/            # Reusable React components
+│   ├── ui/               # shadcn/ui components
+│   ├── navigation.tsx    # Main navigation
+│   └── footer.tsx        # Site footer
+├── lib/                  # Utility libraries
+│   ├── auth.ts          # NextAuth configuration
+│   ├── auth-helpers.ts  # Authentication helpers
+│   ├── db.ts            # Prisma client
+│   └── utils.ts         # General utilities
+├── types/               # TypeScript type definitions
+└── hooks/               # Custom React hooks
 ```
 
-## 🎨 Available Features & Components
+## 🔐 Authentication & Authorization
 
-This scaffold includes a comprehensive set of modern web development tools:
+The platform implements role-based access control:
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+- **PUBLIC** - Can view public cases and subscribe
+- **JOURNALIST** - Can create and manage cases, upload documents
+- **MODERATOR** - Can review and moderate content
+- **ADMIN** - Full system access
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+## 📱 Mobile & PWA Support
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
+The platform includes Progressive Web App capabilities:
+- Offline functionality for critical features
+- Mobile-optimized responsive design
+- App-like experience on mobile devices
+- Push notifications (planned)
 
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Fetch + TanStack Query
-- **State Management**: Simple and scalable with Zustand
+## 🔒 Security Features
 
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
+- **End-to-End Encryption** – Protect journalist and source identity
+- **Document Backups** – Cloud + local redundancy
+- **Audit Trails** – Every edit and upload logged
+- **Source Protection** – Anonymous source options
+- **Platform Independence** – Data hosted on owned servers
 
-## 🤝 Get Started with Z.ai
+## 🌐 API Documentation
 
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
+### Authentication Endpoints
+- `POST /api/auth/register` - User registration
+- `GET/POST /api/auth/[...nextauth]` - NextAuth.js handlers
+
+### Case Management Endpoints
+- `GET /api/cases` - List cases with filtering
+- `POST /api/cases` - Create new case
+- `GET /api/cases/[id]` - Get case details
+- `PUT /api/cases/[id]` - Update case
+- `DELETE /api/cases/[id]` - Delete case
+- `GET /api/cases/by-slug/[slug]` - Get case by slug
+
+## 🧪 Development
+
+### Available Scripts
+- `bun run dev` - Start development server
+- `bun run build` - Build for production
+- `bun run lint` - Run ESLint
+- `bun run db:push` - Push schema changes to database
+- `bun run db:generate` - Generate Prisma client
+
+### Code Quality
+- ESLint configuration for Next.js
+- TypeScript strict mode
+- Prisma for type-safe database access
+- Component-driven architecture
+
+## 📊 Current Status
+
+### ✅ Completed Features
+- [x] Comprehensive database schema
+- [x] Authentication system with role-based access
+- [x] Case management system (CRUD operations)
+- [x] Responsive UI with navigation and footer
+- [x] Case listing with filtering and search
+- [x] Case creation and detail views
+- [x] Journalist profile system foundation
+
+### 🚧 In Progress
+- [ ] Document upload system
+- [ ] Case timeline management
+- [ ] Source verification system
+- [ ] Public subscription features
+
+### 📋 Planned Features
+- [ ] Admin dashboard
+- [ ] Email notification system
+- [ ] Advanced search and filtering
+- [ ] Mobile app development
+- [ ] Payment/subscription system
+- [ ] Social media integration
+- [ ] Analytics and reporting
+
+## 🤝 Contributing
+
+We welcome contributions to the IIJN platform! Please follow these guidelines:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+- Follow the existing code style
+- Write TypeScript for all new code
+- Add tests for new features
+- Update documentation as needed
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Independent journalists across India who inspired this platform
+- The open-source community for the amazing tools and libraries
+- All contributors who help make independent journalism stronger
+
+## 📞 Contact
+
+- **Email**: contact@iijn.org
+- **Website**: https://iijn.org
+- **GitHub**: https://github.com/jitenkr2030/IIJ-Network
+
+## 🔮 Future Roadmap
+
+### Phase 1 (Current)
+- Core case management
+- Basic journalist verification
+- Public case browsing
+
+### Phase 2 (Next 3 months)
+- Document management system
+- Advanced timeline features
+- Email notifications
+- Mobile PWA improvements
+
+### Phase 3 (6 months)
+- Admin dashboard
+- Payment/subscription system
+- Advanced analytics
+- Social media integration
+
+### Phase 4 (12 months)
+- Native mobile apps
+- AI-powered content analysis
+- Multi-language support
+- International expansion
 
 ---
 
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+**Built with ❤️ for independent journalism in India**
