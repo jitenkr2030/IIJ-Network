@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Notifications } from "@/components/notifications"
 import {
   BookOpen,
   FileText,
@@ -45,6 +46,7 @@ export function Navigation() {
     { href: "/cases/my", label: "My Cases", icon: FileText },
     { href: "/cases/new", label: "New Case", icon: PlusCircle },
     { href: "/profile", label: "Profile", icon: User },
+    { href: "/notifications", label: "Notifications", icon: Bell },
   ]
 
   const adminNavItems = [
@@ -103,9 +105,7 @@ export function Navigation() {
             {session ? (
               <>
                 {/* Notifications */}
-                <Button variant="ghost" size="sm">
-                  <Bell className="h-4 w-4" />
-                </Button>
+                <Notifications />
 
                 {/* User Menu */}
                 <DropdownMenu>

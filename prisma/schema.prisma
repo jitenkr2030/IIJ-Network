@@ -27,6 +27,8 @@ model User {
   caseComments      CaseComment[]
   verifications     Verification[]
   auditLogs         AuditLog[]
+  notifications     Notification[]
+  emailSubscriptions EmailSubscription[]
 
   @@map("users")
 }
@@ -64,6 +66,7 @@ model JournalistProfile {
   mentees           JournalistProfile[] @relation("MentorMentee")
   cases             Case[]            // Cases owned by journalist
   publications      Publication[]
+  notifications     Notification[]
 
   @@map("journalist_profiles")
 }
@@ -109,6 +112,7 @@ model Case {
   updates           CaseUpdate[]
   comments          CaseComment[]
   subscriptions     CaseSubscription[]
+  notifications     Notification[]
 
   @@map("cases")
 }
@@ -375,4 +379,120 @@ model SystemConfig {
   updatedAt DateTime @updatedAt
 
   @@map("system_config")
+}
+
+// Notification System
+model Notification {
+  id          String           @id @default(cuid())
+  userId      String
+  type        NotificationType
+  title       String
+  message     String
+  data        String?          // JSON object with additional data
+  isRead      Boolean          @default(false)
+  priority    NotificationPriority @default(MEDIUM)
+  entityId    String?          // ID of related entity (case, document, etc.)
+  entityType  String?          // Type of related entity
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  case        Case?            @relation(fields: [entityId], references: [id])
+  journalist  JournalistProfile? @relation(fields: [entityId], references: [id])
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  CASE_PUBLISHED
+  CASE_UPDATED
+  CASE_COMMENT
+  DOCUMENT_UPLOADED
+  VERIFICATION_REQUESTED
+  VERIFICATION_COMPLETED
+  SUBSCRIPTION_ALERT
+  SYSTEM_ANNOUNCEMENT
+  JOURNALIST_VERIFIED
+  MENTION
+  DEADLINE_REMINDER
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// Email Subscription System
+model EmailSubscription {
+  id          String               @id @default(cuid())
+  userId      String               @unique
+  email       String
+  isActive    Boolean              @default(true)
+  preferences String?              // JSON object with subscription preferences
+  frequency   EmailFrequency       @default(DAILY)
+  lastSent    DateTime?
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  // Relations
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("email_subscriptions")
+}
+
+enum EmailFrequency {
+  IMMEDIATE
+  DAILY
+  WEEKLY
+  NEVER
+}
+
+// Email Template System
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  subject     String
+  htmlContent String
+  textContent String?
+  variables   String?  // JSON array of template variables
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  emailQueues EmailQueue[]
+
+  @@map("email_templates")
+}
+
+// Email Queue System
+model EmailQueue {
+  id          String   @id @default(cuid())
+  to          String
+  subject     String
+  htmlContent String
+  textContent String?
+  templateId  String?
+  data        String?  // JSON object with template data
+  status      EmailStatus @default(PENDING)
+  attempts    Int      @default(0)
+  sentAt      DateTime?
+  error       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  template    EmailTemplate? @relation(fields: [templateId], references: [id])
+
+  @@map("email_queue")
+}
+
+enum EmailStatus {
+  PENDING
+  SENDING
+  SENT
+  FAILED
 }

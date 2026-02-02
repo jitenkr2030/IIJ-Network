@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { CaseStatus, Priority } from "@prisma/client"
+import { CaseStatus, Priority, NotificationType } from "@prisma/client"
 import { z } from "zod"
+import { notificationService } from "@/lib/notification-service"
 
 const createCaseSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -182,6 +183,21 @@ export async function POST(request: NextRequest) {
         }
       }
     })
+
+    // Send notification to admin users about new case
+    if (newCase.isPublic) {
+      await notificationService.notifyJournalistFollowers(
+        newCase.journalistId || "",
+        NotificationType.CASE_PUBLISHED,
+        `New Case Published: ${newCase.title}`,
+        `${newCase.journalist?.user.name || "A journalist"} has published a new case: ${newCase.description}`,
+        {
+          caseId: newCase.id,
+          caseSlug: newCase.slug,
+          journalistName: newCase.journalist?.user.name
+        }
+      )
+    }
 
     return NextResponse.json(newCase, { status: 201 })
   } catch (error) {
